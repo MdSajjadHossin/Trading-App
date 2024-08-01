@@ -90,7 +90,7 @@ public class AuthController {
             authResponse.setTwoFactorAuthEnabled(true);
             String otp = OtpUtils.generateOTP();
 
-            TwoFactorOTP oldTwoFactorOtp = twoFactorOtpService.findByUser(user.getId());
+            TwoFactorOTP oldTwoFactorOtp = twoFactorOtpService.findByUser(authUser.getId());
             if(oldTwoFactorOtp != null){
                 twoFactorOtpService.deleteTwoFactorOtp(oldTwoFactorOtp);
             }
@@ -122,6 +122,7 @@ public class AuthController {
         return new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
     }
 
+    @PostMapping("/two-factor/otp/{otp}")
     public ResponseEntity<AuthResponse> verifySignInOtp(@PathVariable String otp,
                                                         @RequestParam String id) throws Exception {
         TwoFactorOTP twoFactorOTP = twoFactorOtpService.findById(id);
